@@ -70,3 +70,10 @@ mini-inventory/
     test_movements.py
 ```
 
+
+## Variante con MongoDB
+
+En [`variante-mongodb/`](variante-mongodb/) hay una segunda implementacion de la
+misma API usando **MongoDB (motor async)** en lugar de SQL: mismos endpoints de
+productos y movimientos, con esquemas y validaciones propias. Util para comparar
+el mismo diseno sobre dos stacks de persistencia.
