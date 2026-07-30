@@ -1,3 +1,5 @@
+from datetime import datetime
+
 import pytest
 from fastapi.testclient import TestClient
 from app.main import app
@@ -11,7 +13,11 @@ class InMemoryProductsRepo:
     async def create(self, data):
         self._auto += 1
         _id = str(self._auto).rjust(24, "0")
-        doc = {**data, "_id": _id, "created_at": None, "updated_at": None}
+        # Las fechas las pone el repositorio real (ProductsRepo.create), y
+        # ProductOut las exige. Dejarlas en None hacia que toda respuesta
+        # fallara la validacion, asi que el doble tiene que ponerlas igual.
+        now = datetime.utcnow()
+        doc = {**data, "_id": _id, "created_at": now, "updated_at": now}
         self.data[_id] = doc
         return doc
 

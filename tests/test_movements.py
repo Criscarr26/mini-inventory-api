@@ -1,3 +1,5 @@
+from datetime import datetime
+
 import pytest
 from fastapi.testclient import TestClient
 from app.main import app
@@ -11,12 +13,27 @@ class InMemoryProductsRepo:
     async def create(self, data):
         self._auto += 1
         _id = str(self._auto).rjust(24, "0")
-        doc = {**data, "_id": _id, "stock": data.get("stock",0)}
+        now = datetime.utcnow()
+        doc = {
+            **data,
+            "_id": _id,
+            "stock": data.get("stock", 0),
+            "created_at": now,
+            "updated_at": now,
+        }
         self.data[_id] = doc
         return doc
 
     async def get_by_id(self, id):
         return self.data.get(id)
+
+    async def get_by_sku(self, sku):
+        # El router de productos comprueba el SKU duplicado antes de crear;
+        # sin este metodo el doble falso rompia todo el flujo de movimientos.
+        for v in self.data.values():
+            if v["sku"] == sku:
+                return v
+        return None
 
     async def adjust_stock(self, product_id, delta):
         p = self.data.get(product_id)

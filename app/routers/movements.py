@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import Optional
 from fastapi import APIRouter, Depends, HTTPException, Query
-from ..models import MovementCreate, MovementOut
+from ..models import MovementCreate, MovementOut, MovementResult
 from ..repositories.movements import MovementsRepo
 from ..repositories.products import ProductsRepo
 from ..services.stock import register_movement, StockError
@@ -9,7 +9,7 @@ from ..deps import get_movements_repo, get_products_repo
 
 router = APIRouter(prefix="/api/movements", tags=["movements"])
 
-@router.post("", status_code=201)
+@router.post("", response_model=MovementResult, status_code=201)
 async def create_movement(
     payload: MovementCreate,
     moves: MovementsRepo = Depends(get_movements_repo),

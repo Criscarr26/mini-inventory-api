@@ -1,6 +1,10 @@
 fastapi==0.111.0
 uvicorn[standard]==0.30.0
 motor==3.5.1
+# motor 3.5.1 declara pymongo<5 pero usa pymongo.cursor._QUERY_OPTIONS,
+# que desaparecio en pymongo 4.9. Sin este tope, un pip install limpio
+# instala 4.17 y la aplicacion no arranca (ImportError).
+pymongo>=4.5,<4.9
 pydantic==2.5.3
 pydantic-settings==2.2.1
 pytest==8.2.0
